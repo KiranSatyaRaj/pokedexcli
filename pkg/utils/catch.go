@@ -2,20 +2,13 @@ package utils
 
 import (
 	"fmt"
+	"io"
 	"math/rand/v2"
 	"encoding/json"
 )
 
-type Pokedex struct {
-	Pokemons map[string]pokemon
-}
-
-type pokemon struct {
-	name string
-	height int
-	weight int
-	stats map[string]int
-	types []string
+type PokeExp struct {
+	BaseExp float64 `json:"base_experience"`
 }
 
 var exp float64
@@ -36,13 +29,23 @@ func CallPokeCatch(pokemon string) (bool, error) {
 	}
 	defer resp.Body.Close()
 	
-	var m map[string]interface{}
-	dec := json.NewDecoder(resp.Body)
-	err = dec.Decode(&m)
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return false, err
+	}
+
+	var exp PokeExp
+	if err = json.Unmarshal(data, &exp); err != nil {
+		return false, nil
+	}
 	
-	baseExp := m["base_experience"].(float64)
-	setParams(baseExp)
-	return performCatch(baseExp), nil
+	setParams(exp.BaseExp)
+	
+	isCaught := performCatch(exp.BaseExp)
+	if isCaught{
+		addEntry(data, pokemon)
+	}
+	return isCaught, nil
 }
 func setParams(baseExp float64) {
 	if maxNum == 0 && chance == 0 && minAttempts == 0 {
@@ -68,13 +71,9 @@ func performCatch(baseExp float64) bool {
 	catchAttempts++
 
 	if catchAttempts < minAttempts {
-		//fmt.Printf("%v < %v\n", exp, baseExp)
 		return false
 	} else {
 		maxNum += chance
-		//chance += int(chance/2)
-		//fmt.Printf("%v < %v\n", exp, baseExp)
-		//fmt.Printf("%v %v\n", maxNum, chance)
 		return false
 	}
 }

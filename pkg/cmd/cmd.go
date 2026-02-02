@@ -39,6 +39,11 @@ var Cmds = map[string]cliCommand {
 		description: "Catching Pokemon adds them to user's Pokedex.",
 		Callback: commandCatch,
 	},
+	"inspect": {
+		name: "inspect",
+		description: "Inspects Pokemon in users' Pokedex.",
+		Callback: commandInspect,
+	},
 }
 
 type cliCommand struct {
@@ -109,6 +114,10 @@ func commandCatch() error {
 	}
 }
 
+func commandInspect() error {
+	utils.Inspect(args.Args[0])
+	return nil
+}
 func printPokemons(pokemons []string) {
 	for _, pokemon := range pokemons {
 		fmt.Println(pokemon)
