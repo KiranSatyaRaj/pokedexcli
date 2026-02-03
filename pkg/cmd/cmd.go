@@ -36,13 +36,18 @@ var Cmds = map[string]cliCommand {
 	},
 	"catch": {
 		name: "catch",
-		description: "Catching Pokemon adds them to user's Pokedex.",
+		description: "Catches a pokemon and adds it to your Pokedex.",
 		Callback: commandCatch,
 	},
 	"inspect": {
 		name: "inspect",
-		description: "Inspects Pokemon in users' Pokedex.",
+		description: "Inspects a Pokemon in your Pokedex.",
 		Callback: commandInspect,
+	},
+	"pokedex": {
+		name: "pokedex",
+		description: "Displays your pokedex",
+		Callback: commandPokedex,
 	},
 }
 
@@ -107,6 +112,7 @@ func commandCatch() error {
 
 	if isCaught {
 		fmt.Printf("%s was caught!\n", pokemon)
+		fmt.Println("You may now inspect it with inspect command")
 		return nil
 	} else {
 		fmt.Printf("%s escaped!\n", pokemon)
@@ -130,3 +136,9 @@ func printLocations(locations []results.LocationArea) {
 	}
 }
 
+func commandPokedex() error {
+	if err := utils.ShowPokedex(); err != nil {
+		return err
+	}
+	return nil
+}

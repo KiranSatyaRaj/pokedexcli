@@ -43,7 +43,9 @@ func CallPokeCatch(pokemon string) (bool, error) {
 	
 	isCaught := performCatch(exp.BaseExp)
 	if isCaught{
-		addEntry(data, pokemon)
+		if err := addEntry(data, pokemon); err != nil {
+			return isCaught, err
+		} 
 	}
 	return isCaught, nil
 }

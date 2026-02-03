@@ -1,5 +1,9 @@
 package utils
 
+import (
+	"fmt"
+)
+
 var	pokedex map[string]*pokemon
 
 type pokemon struct {
@@ -63,3 +67,15 @@ func setTypes() error {
 	}
 	return nil
 }
+
+func ShowPokedex() error {
+	if pokedex == nil {
+		return fmt.Errorf("You have not caught any pokemons.")
+	}
+	fmt.Println("Your Pokedex:")
+	for pokemon, _ := range pokedex {
+		fmt.Printf("  - %s\n", pokemon)
+	}
+	return nil
+}
+

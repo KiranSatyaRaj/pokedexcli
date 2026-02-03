@@ -27,7 +27,9 @@ func TakeInput() {
 				if len(cleanText) > 1 {
 					args.CreateArgs(cleanText[1:])
 				}
-				validCmd.Callback()
+				if err := validCmd.Callback(); err != nil {
+					fmt.Println(err)
+				}
 			} else {
 				fmt.Println("Unknown Command")
 			}
